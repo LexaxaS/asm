@@ -47,7 +47,7 @@ const String* setPtr(char* buf, size_t nLines, size_t flen)
     size_t buf_i = 0;
     size_t ptr_j = 1;
 
-    String* pointers = (String*) calloc(nLines + 1, sizeof(char**));
+    String* pointers = (String*) calloc(nLines + 1, sizeof(*pointers));
 
     size_t lineLen = 0;
 
@@ -89,7 +89,7 @@ const String* setPtr(char* buf, size_t nLines, size_t flen)
 size_t countLines(const char* str)
 {
     size_t nlines = 1;
-    char* terPtr = strchr(str, '\n');
+    const char* terPtr = strchr(str, '\n');
     while (terPtr != NULL)
         {
         nlines++;

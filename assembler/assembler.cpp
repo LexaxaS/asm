@@ -61,8 +61,6 @@ int main()
         printf("%d ", codeArray[i]);
     //writeInFileBin(fpdestbin, codeArray, arrLen);
     fclose(fpsource);
-    fclose(fpdest);
-    printf("huy\n");
     return 0;
     }
 
@@ -212,7 +210,7 @@ error_t writeInFile(FILE* filedest, cmdel_t* codeArray, size_t arrLen)
         {
         printf("g = %d\n", codeArray[i]);
             cmdel_t code = codeArray[i]; 
-        fprintf(filedest, "%d", 1); 
+        fprintf(filedest, "%d ", code); 
         }
     return errno;
     }
