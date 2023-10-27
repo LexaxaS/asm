@@ -13,7 +13,7 @@ struct String
 struct Text
 {
     char* bufPtr;
-    const String* lines;
+    String* lines;
     size_t size;
     size_t nLines;
     FILE* file;
@@ -27,7 +27,7 @@ bool isZero(double x);
 bool areEqual(double a, double b);
 
 Text setbuf(char filename_i[]);
-const String* setPtr(char* buf, size_t nLines, size_t flen);
+String* setPtr(char* buf, size_t nLines, size_t flen);
 void printBuf(const String* pointers, FILE *SortedEO);
 void bufReturn(char* buf, size_t flen);
 void bufClear(void);

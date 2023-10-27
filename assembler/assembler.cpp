@@ -61,6 +61,7 @@ int main()
         printf("%d ", codeArray[i]);
     //writeInFileBin(fpdestbin, codeArray, arrLen);
     fclose(fpsource);
+    fclose(fpdest);
     return 0;
     }
 
@@ -120,7 +121,6 @@ error_t compile(char* fpname, size_t *arrLen, cmdel_t* codeArray)
         printf("%d ", codeArray[i]);
         }
 
-    fclose(codeStruct.file);
     return errno;
     }
 
@@ -210,7 +210,7 @@ error_t writeInFile(FILE* filedest, cmdel_t* codeArray, size_t arrLen)
         {
         printf("g = %d\n", codeArray[i]);
             cmdel_t code = codeArray[i]; 
-        fprintf(filedest, "%d ", code); 
+        fprintf(filedest, "%d", code); 
         }
     return errno;
     }
@@ -222,4 +222,11 @@ error_t writeInFileBin(FILE* filedest, cmdel_t* codeArray, size_t arrLen)
     for (size_t i = 0; i < arrLen; i++)
         printf("<%d> ", codeArray[i]);
     return errno;
+    }
+
+error_t destruct(Text* codeStruct, cmdel_t* codeArr)
+    {
+    free(codeStruct->bufPtr);
+    free(codeStruct->lines);
+    free(codeArr);
     }

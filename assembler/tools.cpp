@@ -12,15 +12,18 @@ void bufClear(void)
     while (getchar() != '\n') { ; }
     }
 
+
 bool isZero(double x)
     {
     return fabs(x) < AT;
     }
 
+
 bool areEqual(double a, double b)
     {
     return fabs(a - b) < AT;
     }
+
 
 Text setbuf(char filename_i[])
     {
@@ -41,7 +44,7 @@ Text setbuf(char filename_i[])
     return text;
     }  
 
-const String* setPtr(char* buf, size_t nLines, size_t flen)
+String* setPtr(char* buf, size_t nLines, size_t flen)
     {
 
     size_t buf_i = 0;
