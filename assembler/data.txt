@@ -1,0 +1,11 @@
+push 3000
+push 3
+pop rax
+push [rax + 5]
+div
+push 700
+push 100
+div
+sub
+out
+hlt
