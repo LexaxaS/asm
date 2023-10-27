@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <sys\stat.h>
 #include <assert.h>
+#include <string.h>
 #include "tools.hpp"
 
 
@@ -29,7 +30,8 @@ Text setbuf(char filename_i[])
 
     FILE *fileEO = fileopener(filename_i);
     text.size = fileLen(filename_i);  
-    char* buf = (char*) calloc(text.size, sizeof(char));
+    char* buf = (char*) calloc(text.size + 1, sizeof(char));
+    buf[text.size] = '\0';
     fread(buf, sizeof(char), text.size, fileEO);
     fclose(fileEO);      
     text.bufPtr = buf;
@@ -87,12 +89,12 @@ const String* setPtr(char* buf, size_t nLines, size_t flen)
 size_t countLines(const char* str)
 {
     size_t nlines = 1;
-    const char* terPtr = strchr(str, '\n');
+    char* terPtr = strchr(str, '\n');
     while (terPtr != NULL)
-    {
+        {
         nlines++;
         terPtr = strchr(terPtr + 1, '\n');
-    }
+        }
     return nlines;
 }
 
