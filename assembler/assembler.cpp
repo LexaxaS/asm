@@ -41,27 +41,19 @@ struct Arg
     cmdel_t argFormat;
     };
 
-error_t compile(char* fpname, size_t *arrLen, cmdel_t* codeArray);
+error_t compile(char* fpname, cmdel_t* codeArray);
 error_t writeInFile(FILE* filedest, cmdel_t* codeArray, size_t arrLen);
 error_t writeInFileBin(FILE* filedest, cmdel_t* codeArray, size_t arrLen);
 error_t SetArg(Text* codeStruct, cmdel_t* codeArray, size_t curLine, cmdel_t code, size_t* position, size_t cmdLen);
 error_t parseLine(cmdel_t* codeArray, Text* codeStruct, size_t curLine, size_t* position);
+error_t destruct(Text* codeStruct, cmdel_t* codeArr);
 
 int main()
     {
-    FILE* fpsource = fileopener("data.txt");
-    FILE* fpdest = fileopenerW("notbin.txt");
-    FILE* fpdestbin = fileopenerWB("assemblerfile.bin");
-    size_t arrLen = 0;
+
     cmdel_t* codeArray = (cmdel_t*) calloc(CodeArrayMaxLen, sizeof(*codeArray));
-    compile("data.txt", &arrLen, codeArray);
-    writeInFile(fpdest, codeArray, arrLen);
-    printf("hyum\n", arrLen);
-    for(size_t i = 0; i < arrLen; i++)
-        printf("%d ", codeArray[i]);
-    //writeInFileBin(fpdestbin, codeArray, arrLen);
-    fclose(fpsource);
-    fclose(fpdest);
+    compile("data.txt", codeArray);
+
     return 0;
     }
 
@@ -89,12 +81,6 @@ error_t emitCode(Arg* arg, cmdel_t* codeArr, size_t* pos, cmdel_t code)
     return errno;
     }
 
-// error_t emitCodeArg(cmdel_t* codeArr, size_t* pos, cmdel_t code, cmdel_t value)
-//     {
-//     codeArr[(*pos)++] = code;
-//     codeArr[(*pos)++] = value;
-//     return errno;
-//     }
 
 error_t emitCodeNoArg(cmdel_t* codeArr, size_t* pos, cmdel_t code)
     {
@@ -103,11 +89,14 @@ error_t emitCodeNoArg(cmdel_t* codeArr, size_t* pos, cmdel_t code)
     return errno;
     }
 
-error_t compile(char* fpname, size_t *arrLen, cmdel_t* codeArray)
+error_t compile(char* fpname, cmdel_t* codeArray)
     {
-    printf("hyu\n");
+
+    FILE* fpdest = fileopenerW("notbin.txt");
+    FILE* fpdestbin = fileopenerWB("assemblerfile.bin");
     Text codeStruct = setbuf(fpname);
 
+    size_t arrLen = 0;
     size_t position = 0;
 
     for (size_t curLine = 0; curLine < codeStruct.nLines - 1; curLine++)
@@ -115,12 +104,20 @@ error_t compile(char* fpname, size_t *arrLen, cmdel_t* codeArray)
         parseLine(codeArray, &codeStruct, curLine, &position);    
         }
 
-    *arrLen = position;
+    arrLen = position;
     for (size_t i = 0; i < position; i++)
         {
         printf("%d ", codeArray[i]);
         }
 
+
+    writeInFile(fpdest, codeArray, arrLen);
+
+    for(size_t i = 0; i < arrLen; i++)
+        printf("%d ", codeArray[i]);
+    //writeInFileBin(fpdestbin, codeArray, arrLen);   
+
+    destruct(&codeStruct, codeArray);
     return errno;
     }
 
@@ -212,6 +209,7 @@ error_t writeInFile(FILE* filedest, cmdel_t* codeArray, size_t arrLen)
             cmdel_t code = codeArray[i]; 
         fprintf(filedest, "%d", code); 
         }
+    fclose(filedest);
     return errno;
     }
 
@@ -221,6 +219,7 @@ error_t writeInFileBin(FILE* filedest, cmdel_t* codeArray, size_t arrLen)
     fwrite(codeArray, sizeof(*codeArray), arrLen, filedest);
     for (size_t i = 0; i < arrLen; i++)
         printf("<%d> ", codeArray[i]);
+    fclose(filedest);
     return errno;
     }
 

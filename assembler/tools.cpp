@@ -41,6 +41,7 @@ Text setbuf(char filename_i[])
     text.nLines = countLines(buf);
     text.lines = setPtr(buf, text.nLines, text.size);
     text.file = fileEO;
+    fclose(fileEO);
     return text;
     }  
 
